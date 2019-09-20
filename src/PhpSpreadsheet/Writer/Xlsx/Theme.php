@@ -96,9 +96,12 @@ class Theme extends WriterPart
     private static $colourScheme = [
         'dk2' => '1F497D',
         'lt2' => 'EEECE1',
-        'accent1' => '4F81BD',
-        'accent2' => 'C0504D',
-        'accent3' => '9BBB59',
+        //previous
+        'accent1' => '4472C4',
+        //current
+        'accent2' => 'ED7D31',
+        //benchmark
+        'accent3' => '000000',
         'accent4' => '8064A2',
         'accent5' => '4BACC6',
         'accent6' => 'F79646',
