@@ -16,8 +16,8 @@ class Axis extends Properties
      * @var array of mixed
      */
     private $axisNumber = [
-        'format' => self::FORMAT_CODE_GENERAL,
-        'source_linked' => 1,
+        'format' => '0%',
+        'source_linked' => 0,
     ];
 
     /**
