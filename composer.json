@@ -1,8 +1,8 @@
 {
-    "name": "phpoffice/phpspreadsheet",
+    "name": "OGWebBuy/phpspreadsheet",
     "description": "PHPSpreadsheet - Read, Create and Write Spreadsheet documents in PHP - Spreadsheet engine",
     "keywords": ["PHP", "OpenXML", "Excel", "xlsx", "xls", "ods", "gnumeric", "spreadsheet"],
-    "homepage": "https://github.com/PHPOffice/PhpSpreadsheet",
+    "homepage": "https://github.com/OGWebBuy/PhpSpreadsheet",
     "type": "library",
     "license": "LGPL-2.1-or-later",
     "authors": [
@@ -23,6 +23,12 @@
         },
         {
             "name": "Adrien Crivelli"
+        },
+        {
+            "name": "Sammantha Sadler"
+        },
+        {
+            "name": "Logan Allen Lohman NFL"
         }
     ],
     "scripts": {
@@ -39,7 +45,7 @@
         ]
     },
     "require": {
-        "php": "^7.1",
+        "php": "^7.0",
         "ext-ctype": "*",
         "ext-dom": "*",
         "ext-gd": "*",
@@ -75,12 +81,12 @@
     },
     "autoload": {
         "psr-4": {
-            "PhpOffice\\PhpSpreadsheet\\": "src/PhpSpreadsheet"
+            "OGWebBuy\\PhpSpreadsheet\\": "src/PhpSpreadsheet"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "PhpOffice\\PhpSpreadsheetTests\\": "tests/PhpSpreadsheetTests"
+            "OGWebBuy\\PhpSpreadsheetTests\\": "tests/PhpSpreadsheetTests"
         }
     }
 }
