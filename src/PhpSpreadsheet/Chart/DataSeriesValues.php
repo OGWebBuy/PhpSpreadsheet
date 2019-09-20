@@ -360,13 +360,19 @@ class DataSeriesValues
     {
         if ($this->dataSource !== null) {
             $calcEngine = Calculation::getInstance($worksheet->getParent());
-            $newDataValues = Calculation::unwrapResult(
-                $calcEngine->_calculateFormulaValue(
-                    '=' . $this->dataSource,
-                    null,
-                    $worksheet->getCell('A1')
-                )
-            );
+            $aryDataSources = explode(',', $this->dataSource);
+            if ($aryDataSources === false || empty($aryDataSources)) {
+                $aryDataSources = array($this->dataSource);
+            }
+            $newDataValues = array();
+            foreach ($aryDataSources as $cDataSource) {
+
+                $cDataSource = str_replace(array( '(', ')', ',' ), '', $cDataSource);
+
+                $newDataValues = array_merge($newDataValues, Calculation::unwrapResult(
+                    $calcEngine->_calculateFormulaValue('=' . $cDataSource, null, $worksheet->getCell('A1'))
+                ));
+            }
             if ($flatten) {
                 $this->dataValues = Functions::flattenArray($newDataValues);
                 foreach ($this->dataValues as &$dataValue) {
@@ -376,26 +382,49 @@ class DataSeriesValues
                 }
                 unset($dataValue);
             } else {
-                list($worksheet, $cellRange) = Worksheet::extractSheetTitle($this->dataSource, true);
-                $dimensions = Coordinate::rangeDimension(str_replace('$', '', $cellRange));
-                if (($dimensions[0] == 1) || ($dimensions[1] == 1)) {
-                    $this->dataValues = Functions::flattenArray($newDataValues);
-                } else {
-                    $newArray = array_values(array_shift($newDataValues));
-                    foreach ($newArray as $i => $newDataSet) {
-                        $newArray[$i] = [$newDataSet];
+//                list($worksheet, $cellRange) = Worksheet::extractSheetTitle($this->dataSource, true);
+//                $dimensions = Coordinate::rangeDimension(str_replace('$', '', $cellRange));
+//                if (($dimensions[0] == 1) || ($dimensions[1] == 1)) {
+//                    $this->dataValues = Functions::flattenArray($newDataValues);
+//                } else {
+//                    $newArray = array_values(array_shift($newDataValues));
+//                    foreach ($newArray as $i => $newDataSet) {
+//                        $newArray[$i] = [$newDataSet];
+//                    }
+//
+//                    foreach ($newDataValues as $newDataSet) {
+//                        $i = 0;
+//                        foreach ($newDataSet as $newDataVal) {
+//                            array_unshift($newArray[$i++], $newDataVal);
+//                        }
+//                    }
+//                    $this->dataValues = $newArray;
+//                }
+                foreach ($aryDataSources as $cDataSource) {
+                    $cellRange = explode('!', $cDataSource);
+                    if (count($cellRange) > 1) {
+                        list(, $cellRange) = $cellRange;
                     }
-
-                    foreach ($newDataValues as $newDataSet) {
-                        $i = 0;
-                        foreach ($newDataSet as $newDataVal) {
-                            array_unshift($newArray[$i++], $newDataVal);
+                    $cellRange = str_replace('$', '', $cellRange[0]);
+                    $dimensions = Coordinate::rangeDimension($cellRange);
+                    if (($dimensions[0] == 1) || ($dimensions[1] == 1)) {
+                        $this->dataValues = array_merge($this->dataValues, Functions::flattenArray($newDataValues));
+                    } else {
+                        $newArray = array_values(array_shift($newDataValues));
+                        foreach ($newArray as $i => $newDataSet) {
+                            $newArray[$i] = array($newDataSet);
                         }
+                        foreach ($newDataValues as $newDataSet) {
+                            $i = 0;
+                            foreach ($newDataSet as $newDataVal) {
+                                array_unshift($newArray[$i++], $newDataVal);
+                            }
+                        }
+                        $this->dataValues = array_merge($this->dataValues, $newArray);
                     }
-                    $this->dataValues = $newArray;
                 }
+                $this->pointCount = count($this->dataValues);
             }
-            $this->pointCount = count($this->dataValues);
         }
     }
 }
